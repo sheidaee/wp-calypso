@@ -5,7 +5,7 @@
  */
 
 import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { localize } from 'i18n-calypso';
@@ -156,30 +156,32 @@ export class LanguagePicker extends PureComponent {
 		const { langCode, langSubcode } = getLanguageCodeLabels( language.langSlug );
 
 		return (
-			<div
-				tabIndex="0"
-				role="button"
-				className="language-picker"
-				onKeyPress={ this.handleKeyPress }
-				onClick={ this.handleClick }
-				disabled={ disabled }
-			>
-				<div className="language-picker__icon">
-					<div className="language-picker__icon-inner">
-						{ langCode }
-						{ langSubcode && <br /> }
-						{ langSubcode }
+			<Fragment>
+				<QueryLanguageNames />
+				<div
+					tabIndex="0"
+					role="button"
+					className="language-picker"
+					onKeyPress={ this.handleKeyPress }
+					onClick={ this.handleClick }
+					disabled={ disabled }
+				>
+					<div className="language-picker__icon">
+						<div className="language-picker__icon-inner">
+							{ langCode }
+							{ langSubcode && <br /> }
+							{ langSubcode }
+						</div>
 					</div>
-				</div>
-				<div className="language-picker__name">
-					<div className="language-picker__name-inner">
-						<div className="language-picker__name-label">{ langName }</div>
-						<div className="language-picker__name-change">{ translate( 'Change' ) }</div>
+					<div className="language-picker__name">
+						<div className="language-picker__name-inner">
+							<div className="language-picker__name-label">{ langName }</div>
+							<div className="language-picker__name-change">{ translate( 'Change' ) }</div>
+						</div>
 					</div>
 				</div>
 				{ this.renderModal( language.langSlug ) }
-				<QueryLanguageNames />
-			</div>
+			</Fragment>
 		);
 	}
 }
