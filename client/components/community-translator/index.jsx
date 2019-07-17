@@ -16,7 +16,7 @@ import config from 'config';
 import { canDisplayCommunityTranslator } from 'components/community-translator/utils';
 import { loadUndeployedTranslations } from 'lib/i18n-utils/switch-locale';
 import { getCurrentUserName } from 'state/current-user/selectors';
-import getUserSetting from 'state/selectors/get-user-setting.js';
+import getUserSetting from 'state/selectors/get-user-setting';
 import { ENABLE_TRANSLATOR_KEY } from 'lib/i18n-utils/constants';
 import QueryUserSettings from 'components/data/query-user-settings';
 
@@ -87,15 +87,12 @@ class CommunityTranslator extends PureComponent {
 		// See https://messageformat.github.io/Jed/
 		const { localeSlug, localeVariant } = i18n.getLocale()[ '' ];
 		const { username } = this.props;
-
-		if ( ! canDisplayCommunityTranslator( localeSlug, localeVariant ) ) {
-			return;
-		}
-
 		const newLocaleCode = localeVariant || localeSlug;
 
 		if ( ! canDisplayCommunityTranslator( localeSlug, localeVariant ) ) {
-			debug( 'community translator not activated for ', newLocaleCode );
+			debug(
+				`community translator not activated for ${ newLocaleCode } (${ localeSlug }/${ localeVariant })`
+			);
 			return;
 		}
 
