@@ -133,12 +133,12 @@ export default {
 		},
 		defaultVariation: 'original',
 	},
-	createAccountUserStep: {
-		datestamp: '20190717',
+	passwordlessSignup: {
+		datestamp: '20190806',
 		variations: {
-			createAccount: 50,
-			user: 50,
+			passwordless: 50,
+			default: 50,
 		},
-		defaultVariation: 'user',
+		defaultVariation: 'default',
 	},
 };
