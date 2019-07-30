@@ -39,12 +39,12 @@ function getLocaleSlugsFromLoadedTranslations() {
 	return {
 		localeSlug,
 		localeVariant,
-		localeCode: localeVariant || localeSlug
+		localeCode: localeVariant || localeSlug,
 	};
 }
 
 class CommunityTranslator extends Component {
-	currentLocale = ( { localeSlug: 'en' } )
+	currentLocale = { localeSlug: 'en' };
 
 	componentDidMount() {
 		// wrap translations from i18n
@@ -53,8 +53,7 @@ class CommunityTranslator extends Component {
 			this.wrapTranslation( options.original, translation, options )
 		);
 
-		this.componentDidMountOrUpdate()
-
+		this.componentDidMountOrUpdate();
 	}
 
 	componentDidUpdate( prevprops ) {
@@ -72,11 +71,7 @@ class CommunityTranslator extends Component {
 
 		// This is a bit weird because we get forcedUpdates from i18n where
 		// our props haven't changed in addition to normal props-driven updates
-		const {
-			localeSlug,
-			localeVariant,
-			localeCode: newLocaleCode,
-		} = getLocaleSlugsFromLoadedTranslations();
+		const { localeCode: newLocaleCode } = getLocaleSlugsFromLoadedTranslations();
 
 		const languageChanged = this.setLanguageIfNecessary();
 
@@ -84,7 +79,11 @@ class CommunityTranslator extends Component {
 		const relevantProps = { username, translatorEnabled };
 		if ( languageChanged || ! isMatch( prevprops, relevantProps ) ) {
 			debug( "fetching user's waiting translations", username, newLocaleCode );
-			loadUndeployedTranslations( { username, locale: newLocaleCode, translationStatus: 'waiting' } );
+			loadUndeployedTranslations( {
+				username,
+				locale: newLocaleCode,
+				translationStatus: 'waiting',
+			} );
 		}
 
 		// We need to force a rerender if the translator has just been enabled
@@ -107,7 +106,7 @@ class CommunityTranslator extends Component {
 		const { username } = this.props;
 		const newLocaleCode = localeVariant || localeSlug;
 
-		if( newLocaleCode === this.currentLocale.langSlug ) {
+		if ( newLocaleCode === this.currentLocale.langSlug ) {
 			return;
 		}
 
@@ -149,8 +148,7 @@ class CommunityTranslator extends Component {
 		// - it will change all the translations over when i18n-calypso
 		//   triggers a rerender (it can't "miss" part of the rerender due to
 		//   the order of callbacks triggered by the change)
-		const currentlyLoadedTranslationsSlug =
-			getLocaleSlugsFromLoadedTranslations().localeCode;
+		const currentlyLoadedTranslationsSlug = getLocaleSlugsFromLoadedTranslations().localeCode;
 		if ( ! canDisplayCommunityTranslator( currentlyLoadedTranslationsSlug ) ) {
 			return displayedTranslationFromPage;
 		}
