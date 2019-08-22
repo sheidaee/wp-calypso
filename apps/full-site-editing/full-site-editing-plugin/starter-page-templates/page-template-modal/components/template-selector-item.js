@@ -26,6 +26,10 @@ const TemplateSelectorItem = props => {
 		blocks = [],
 	} = props;
 
+	if ( ! blocks.length && 'blank' !== value ) {
+		return null;
+	}
+
 	// Define static or dynamic preview.
 	const innerPreview = useDynamicPreview ? (
 		<Disabled>
