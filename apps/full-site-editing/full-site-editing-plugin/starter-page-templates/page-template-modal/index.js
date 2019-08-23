@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { isEmpty, reduce } from 'lodash';
+import { isEmpty } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
 import { compose } from '@wordpress/compose';
 import { Button, Modal, Spinner } from '@wordpress/components';
@@ -50,27 +50,23 @@ class PageTemplateModal extends Component {
 			trackView( this.props.segment.id, this.props.vertical.id );
 		}
 
-		// Populate the state with parsed blocks
+		// Populate the state with parsed blocks, template by template,
 		// immediately after the modal has been rendered.
 		// Wrapping it in a setTimeout() call,
 		// allows showing the modal with empty thumbnails
 		// before to start to parser and render them
 		// into their preview spots. It reduces the time considerably.
-		setTimeout( () => {
-			// Parse templates blocks and store them into the state.
-			const blocks = reduce(
-				templates,
-				( prev, { slug, content } ) => {
-					prev[ slug ] = content
+		for ( const i in templates ) {
+			setTimeout(
+				( ( { slug, content } ) => {
+					const parsedBlocks = content
 						? parseBlocks( replacePlaceholders( content, siteInformation ) )
 						: [];
-					return prev;
-				},
-				{}
+					this.setState( { blocks: { ...this.state.blocks, [ slug ]: parsedBlocks } } );
+				} ).bind( null, templates[ i ] ),
+				50 * i
 			);
-			// eslint-disable-next-line react/no-did-mount-set-state
-			this.setState( { blocks } );
-		}, 0 );
+		}
 	}
 
 	setTemplate = ( slug, title ) => {
