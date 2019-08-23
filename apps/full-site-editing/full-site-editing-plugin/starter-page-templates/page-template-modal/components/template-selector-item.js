@@ -3,14 +3,14 @@
  */
 
 /**
- * Internal dependencies
- */
-
-/**
  * WordPress dependencies
  */
+import { Disabled, Spinner } from '@wordpress/components';
+
+/**
+ * Internal dependencies
+ */
 import BlockPreview from './block-template-preview';
-import { Disabled } from '@wordpress/components';
 
 const TemplateSelectorItem = props => {
 	const {
@@ -26,22 +26,27 @@ const TemplateSelectorItem = props => {
 		blocks = [],
 	} = props;
 
-	if ( ! blocks.length && 'blank' !== value ) {
-		return null;
-	}
+	const renderInnerButton = () => {
+		if ( ! blocks.length ) {
+			return 'blank' !== value ? <Spinner /> : null;
+		}
 
-	// Define static or dynamic preview.
-	const innerPreview = useDynamicPreview ? (
-		<Disabled>
-			<BlockPreview blocks={ blocks } viewportWidth={ 960 } />
-		</Disabled>
-	) : (
-		<img
-			className="template-selector-item__media"
-			src={ staticPreviewImg }
-			alt={ staticPreviewImgAlt }
-		/>
-	);
+		if ( useDynamicPreview ) {
+			return (
+				<Disabled>
+					<BlockPreview blocks={ blocks } viewportWidth={ 960 } />
+				</Disabled>
+			);
+		}
+
+		return (
+			<img
+				className="template-selector-item__media"
+				src={ staticPreviewImg }
+				alt={ staticPreviewImgAlt }
+			/>
+		);
+	};
 
 	return (
 		<button
@@ -53,7 +58,7 @@ const TemplateSelectorItem = props => {
 			onClick={ () => onSelect( value, label ) }
 			aria-describedby={ help ? `${ id }__help` : undefined }
 		>
-			<div className="template-selector-item__preview-wrap">{ innerPreview }</div>
+			<div className="template-selector-item__preview-wrap">{ renderInnerButton() }</div>
 			{ label }
 		</button>
 	);
