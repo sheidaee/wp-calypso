@@ -61,10 +61,10 @@ class PageTemplateModal extends Component {
 				( ( { slug, content } ) => {
 					const parsedBlocks = content
 						? parseBlocks( replacePlaceholders( content, siteInformation ) )
-						: [];
+						: null;
 					this.setState( { blocks: { ...this.state.blocks, [ slug ]: parsedBlocks } } );
 				} ).bind( null, templates[ i ] ),
-				50 * i
+				500 * i
 			);
 		}
 	}

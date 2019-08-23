@@ -26,9 +26,22 @@ const TemplateSelectorItem = props => {
 		blocks = [],
 	} = props;
 
+	/**
+	 * it renders the inner block of the button component.
+	 * It can be:
+	 *  * _null_ if there are not defined blocks for the template (blank).
+	 *  * _en empty array_ while it's still processing the template content.
+	 *  * _an array of blocks_ once the template content has been parsed.
+	 *
+	 * @return {null|*} The inner content of the Item button.
+	 */
 	const renderInnerButton = () => {
+		if ( null === blocks ) {
+			return null;
+		}
+
 		if ( ! blocks.length ) {
-			return 'blank' !== value ? <Spinner /> : null;
+			return <Spinner />;
 		}
 
 		if ( useDynamicPreview ) {
