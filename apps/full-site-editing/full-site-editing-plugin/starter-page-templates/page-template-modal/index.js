@@ -64,7 +64,7 @@ class PageTemplateModal extends Component {
 						: null;
 					this.setState( { blocks: { ...this.state.blocks, [ slug ]: parsedBlocks } } );
 				} ).bind( null, templates[ i ] ),
-				500 * i
+				50 * i
 			);
 		}
 	}
