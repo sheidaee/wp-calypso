@@ -237,6 +237,17 @@ const webpackConfig = {
 				test: /node_modules[/\\]tinymce/,
 				use: 'imports-loader?this=>window',
 			},
+			{
+				test: /\.md$/,
+				use: [
+					{
+						loader: 'html-loader',
+					},
+					{
+						loader: 'markdown-loader',
+					},
+				],
+			},
 		],
 	},
 	resolve: {
