@@ -14,6 +14,7 @@ RETURN=0
 CLEAN=0
 GREP=""
 LOCAL_BROWSER="chrome"
+FILE_LIST=""
 
 # Warn if NODE_CONFIG_ENV variable is not set
 if [ "$NODE_CONFIG_ENV" = "" ]; then
@@ -58,7 +59,7 @@ usage () {
 -I		  - Execute tests in specs-i18n/ directory
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
--h		  - This help listing
+-f [fileList]	  - List of test files to run
 EOF
   exit 1
 }
@@ -67,7 +68,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h:F" opt; do
+while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:iIUvxu:h:F:f:" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -180,6 +181,9 @@ while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h:F" opt; do
     h)
       usage
       ;;
+    f)
+      FILE_LIST=$OPTARG
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       echo ""
@@ -214,14 +218,14 @@ if [ $PARALLEL == 1 ]; then
 
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
-      CMD="env BROWSERSIZE=mobile $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER"
+      CMD="env BROWSERSIZE=mobile $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER --test=$FILE_LIST"
 
       eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
-      CMD="env BROWSERSIZE=desktop $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER"
+      CMD="env BROWSERSIZE=desktop $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER --test=$FILE_LIST"
 
       eval $CMD
       RETURN+=$?
@@ -234,7 +238,7 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
       for locale in ${LOCALE_ARRAY[@]}; do
         for config in "${MAGELLAN_CONFIGS[@]}"; do
           if [ "$config" != "" ]; then
-            CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER"
+            CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER --test=$FILE_LIST"
 
             eval $CMD
             RETURN+=$?
