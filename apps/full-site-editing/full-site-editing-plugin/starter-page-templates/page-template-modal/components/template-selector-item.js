@@ -36,12 +36,23 @@ const TemplateSelectorItem = props => {
 	 * @return {null|*} The inner content of the Item button.
 	 */
 	const renderInnerButton = () => {
+		/* eslint-disable wpcalypso/jsx-classname-namespace */
 		if ( null === blocks ) {
-			return null;
+			return (
+				<div className="edit-post-visual-editor">
+					<div className="editor-styles-wrapper" />
+				</div>
+			);
 		}
 
 		if ( ! blocks.length ) {
-			return <Spinner />;
+			return (
+				<div className="edit-post-visual-editor">
+					<div className="editor-styles-wrapper">
+						<Spinner />
+					</div>
+				</div>
+			);
 		}
 
 		if ( useDynamicPreview ) {
@@ -59,6 +70,7 @@ const TemplateSelectorItem = props => {
 				alt={ staticPreviewImgAlt }
 			/>
 		);
+		/* eslint-enable wpcalypso/jsx-classname-namespace */
 	};
 
 	return (
