@@ -150,4 +150,13 @@ export default {
 		},
 		defaultVariation: 'original',
 	},
+	prefilDomainStepValue: {
+		datestamp: '20190821',
+		variations: {
+			test: 50,
+			control: 50,
+		},
+		defaultVariation: 'control',
+		allowExistingUsers: true,
+	},
 };
