@@ -39,9 +39,9 @@ const shouldShowInstance = ( example, filter, component ) => {
 const getReadmeFilePath = ( section, example ) => {
 	switch ( section ) {
 		case 'design':
-			return `/client/components/${ example.props.readmeFilePath }/README.md`;
+			return `components/${ example.props.readmeFilePath }/README.md`;
 		default:
-			return `/client/${ section }/${ example.props.readmeFilePath }/README.md`;
+			return `${ section }/${ example.props.readmeFilePath }/README.md`;
 	}
 };
 
