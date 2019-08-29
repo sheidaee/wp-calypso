@@ -140,7 +140,6 @@
 		"lru": "3.1.0",
 		"lunr": "2.3.6",
 		"markdown-loader": "5.1.0",
-		"marked": "0.7.0",
 		"mkdirp": "0.5.1",
 		"moment": "2.24.0",
 		"moment-timezone": "0.5.26",
