@@ -53,7 +53,11 @@ export default class extends React.Component {
 			error: null,
 		} );
 		this.delayLoadingMessage();
-		import( /* webpackInclude: /\.md$/, webpackPreload: true */ `../../${ this.props.path }` )
+		import(
+			/* webpackInclude: /\.md$/ */
+			/* webpackPreload: true */
+			`../../${ this.props.path }`
+		)
 			.then( module => this.setState( { body: module.default, error: null } ) )
 			.catch( error => this.setState( { body: null, error } ) );
 	};
