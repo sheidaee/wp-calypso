@@ -31,6 +31,7 @@ export default class ReadmeViewer extends Component {
 
 		try {
 			const res = await import(
+				/* webpackChunkName: "async-load-readme-[request]" */
 				/* webpackInclude: /README\.md$/ */
 				/* webpackPreload: true */
 				`../../${ readmeFilePath }`

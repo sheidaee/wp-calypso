@@ -54,6 +54,7 @@ export default class extends React.Component {
 		} );
 		this.delayLoadingMessage();
 		import(
+			/* webpackChunkName: "async-load-doc-[request]" */
 			/* webpackInclude: /\.md$/ */
 			/* webpackPreload: true */
 			`../../${ this.props.path }`
