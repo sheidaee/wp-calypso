@@ -30,7 +30,9 @@ export default class ReadmeViewer extends Component {
 		const { readmeFilePath } = this.props;
 
 		try {
-			const res = await import( /* webpackInclude: /README\.md$/ */ `../../${ readmeFilePath }` );
+			const res = await import(
+				/* webpackInclude: /README\.md$/, webpackPreload: true */ `../../${ readmeFilePath }`
+			);
 			this.setState( { readme: htmlToReactParser.parse( res.default ) } );
 		} catch ( err ) {
 			// Do nothing.
