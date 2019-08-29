@@ -56,7 +56,6 @@ export default class extends React.Component {
 		import(
 			/* webpackChunkName: "async-load-doc-[request]" */
 			/* webpackInclude: /\.md$/ */
-			/* webpackPreload: true */
 			`../../${ this.props.path }`
 		)
 			.then( module => this.setState( { body: module.default, error: null } ) )

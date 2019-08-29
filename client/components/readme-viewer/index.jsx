@@ -33,7 +33,6 @@ export default class ReadmeViewer extends Component {
 			const res = await import(
 				/* webpackChunkName: "async-load-readme-[request]" */
 				/* webpackInclude: /README\.md$/ */
-				/* webpackPreload: true */
 				`../../${ readmeFilePath }`
 			);
 			this.setState( { readme: htmlToReactParser.parse( res.default ) } );
