@@ -620,7 +620,6 @@ jobs:
 workflows:
   version: 2
   calypso:
-    unless: << pipeline.parameters.e2e-only >>
     jobs:
       - setup
       - prime-calypso-live:
