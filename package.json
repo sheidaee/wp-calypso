@@ -325,7 +325,7 @@
 		"mockdate": "2.0.2",
 		"moment-timezone-data-webpack-plugin": "1.1.0",
 		"ncp": "2.0.0",
-		"nock": "10.0.6",
+		"nock": "11.3.5",
 		"npm-merge-driver": "2.3.5",
 		"prettier": "https://github.com/Automattic/wp-prettier/releases/download/wp-1.17.0/wp-prettier-1.17.0.tgz",
 		"react-test-renderer": "16.8.6",
