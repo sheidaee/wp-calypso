@@ -150,7 +150,7 @@ export default {
 		},
 		defaultVariation: 'original',
 	},
-	prefilDomainStepValue: {
+	prefillDomainStepValue: {
 		datestamp: '20190821',
 		variations: {
 			test: 50,
