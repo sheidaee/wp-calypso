@@ -82,12 +82,7 @@ class WP_Template_Inserter {
 		$response = $this->fetch_retry( $request_url, $request_args );
 
 		if ( ! $response ) {
-			do_action(
-				'full_site_editing_insert_default_template_data_error',
-				'API error.',
-				$request_url,
-				$request_args['body']
-			);
+			do_action( 'full_site_editing_data_population_error', 'default_template_data', 'API error', $request_url, $request_args['body'] );
 			return;
 		}
 
@@ -143,17 +138,14 @@ class WP_Template_Inserter {
 	 * This function will be called on plugin activation hook.
 	 */
 	public function insert_default_template_data() {
-		do_action( 'full_site_editing_before_insert_default_template_data' );
+		do_action( 'full_site_editing_before_data_population', 'default_template_data' );
 
 		if ( $this->is_template_data_inserted() ) {
 			/*
 			 * Bail here to prevent inserting the FSE data twice for any given theme.
 			 * Multiple themes will still be able to insert different templates.
 			 */
-			do_action(
-				'full_site_editing_insert_default_template_data_error',
-				'Default template data already exists.'
-			);
+			do_action( 'full_site_editing_data_population_error', 'default_template_data', 'Default template data already exists' );
 			return;
 		}
 
@@ -203,7 +195,7 @@ class WP_Template_Inserter {
 
 		add_option( $this->fse_template_data_option, true );
 
-		do_action( 'full_site_editing_insert_default_template_data_success' );
+		do_action( 'full_site_editing_data_population_success', 'default_template_data' );
 	}
 
 	/**
@@ -222,14 +214,11 @@ class WP_Template_Inserter {
 	 * with 'About' and 'Contact' titles already exist.
 	 */
 	public function insert_default_pages() {
-		do_action( 'full_site_editing_before_insert_default_pages' );
+		do_action( 'full_site_editing_before_data_population', 'default_pages' );
 
 		// Bail if this data has already been inserted.
 		if ( $this->is_pages_data_inserted() ) {
-			do_action(
-				'full_site_editing_insert_default_pages_error',
-				'Default pages already exist.'
-			);
+			do_action( 'full_site_editing_data_population_error', 'default_pages', 'Default pages already exist' );
 			return;
 		}
 
@@ -243,11 +232,7 @@ class WP_Template_Inserter {
 		$response = $this->fetch_retry( $request_url );
 
 		if ( ! $response ) {
-			do_action(
-				'full_site_editing_insert_default_pages_error',
-				'API error.',
-				$request_url
-			);
+			do_action( 'full_site_editing_data_population_error', 'default_pages', 'API error.', $request_url );
 			return;
 		}
 
@@ -292,7 +277,7 @@ class WP_Template_Inserter {
 
 		update_option( $this->fse_page_data_option, true );
 
-		do_action( 'full_site_editing_insert_default_pages_success' );
+		do_action( 'full_site_editing_data_population_success', 'default_pages' );
 	}
 
 	/**
