@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
+import { isEqual } from 'lodash';
 
 /**
  * Internal dependencies
@@ -15,7 +16,8 @@ import { abtest } from 'lib/abtest';
 import config from 'config';
 import ECommerceManageNudge from 'blocks/ecommerce-manage-nudge';
 import { getDecoratedSiteDomains } from 'state/sites/domains/selectors';
-import { getGSuiteSupportedDomains, hasGSuite } from 'lib/gsuite';
+import { getGSuiteSupportedDomains, hasGSuite, hasGSuiteOtherProvidor } from 'lib/gsuite';
+import { getEmailForwardingTypeForDomains } from 'state/selectors/get-email-forwarding-type';
 import GoogleMyBusinessStatsNudge from 'blocks/google-my-business-stats-nudge';
 import GSuiteStatsNudge from 'blocks/gsuite-stats-nudge';
 import isGoogleMyBusinessStatsNudgeVisibleSelector from 'state/selectors/is-google-my-business-stats-nudge-visible';
@@ -24,6 +26,7 @@ import isUpworkStatsNudgeDismissed from 'state/selectors/is-upwork-stats-nudge-d
 import QuerySiteDomains from 'components/data/query-site-domains';
 import UpworkStatsNudge from 'blocks/upwork-stats-nudge';
 import WpcomChecklist from 'my-sites/checklist/wpcom-checklist';
+import QueryEmailForwards from 'components/data/query-email-forwards';
 
 class StatsBanners extends Component {
 	static propTypes = {
@@ -35,16 +38,14 @@ class StatsBanners extends Component {
 	};
 
 	shouldComponentUpdate( nextProps ) {
-		if (
+		return (
 			this.props.isGSuiteStatsNudgeVisible !== nextProps.isGSuiteStatsNudgeVisible ||
 			this.props.isUpworkStatsNudgeVisible !== nextProps.isUpworkStatsNudgeVisible ||
 			this.props.isGoogleMyBusinessStatsNudgeVisible !==
 				nextProps.isGoogleMyBusinessStatsNudgeVisible ||
-			this.props.domains.length !== nextProps.domains.length
-		) {
-			return true;
-		}
-		return false;
+			this.props.domains.length !== nextProps.domains.length ||
+			! isEqual( this.props.emailForwardingTypes, nextProps.emailForwardingTypes )
+		);
 	}
 
 	renderBanner() {
@@ -86,14 +87,17 @@ class StatsBanners extends Component {
 	}
 
 	showGSuiteBanner() {
-		const { domains } = this.props;
+		const { domains, emailForwardingTypes } = this.props;
 		const supportedDomains = getGSuiteSupportedDomains( domains );
+
 		return (
 			this.props.isGSuiteStatsNudgeVisible &&
 			supportedDomains.length > 0 &&
-			supportedDomains.filter( function( domain ) {
-				return hasGSuite( domain );
-			} ).length === 0
+			! (
+				hasGSuite( supportedDomains[ 0 ] ) ||
+				hasGSuiteOtherProvidor( supportedDomains[ 0 ] ) ||
+				emailForwardingTypes[ supportedDomains[ 0 ].name ]
+			)
 		);
 	}
 
@@ -112,6 +116,9 @@ class StatsBanners extends Component {
 
 		return (
 			<Fragment>
+				{ this.props.domains.map( domain => (
+					<QueryEmailForwards domainName={ domain.name } key={ domain.name } />
+				) ) }
 				{ siteId && <QuerySiteDomains siteId={ siteId } /> }
 				{ 'ecommerce-bundle' !== planSlug && <WpcomChecklist viewMode="banner" /> }
 				{ 'ecommerce-bundle' === planSlug && <ECommerceManageNudge siteId={ siteId } /> }
@@ -122,8 +129,15 @@ class StatsBanners extends Component {
 }
 
 export default connect( ( state, ownProps ) => {
+	const domains = getDecoratedSiteDomains( state, ownProps.siteId );
+
 	return {
-		domains: getDecoratedSiteDomains( state, ownProps.siteId ),
+		domains,
+		emailForwardingTypes: getEmailForwardingTypeForDomains(
+			state,
+			getGSuiteSupportedDomains( domains ),
+			true
+		),
 		isGoogleMyBusinessStatsNudgeVisible: isGoogleMyBusinessStatsNudgeVisibleSelector(
 			state,
 			ownProps.siteId
