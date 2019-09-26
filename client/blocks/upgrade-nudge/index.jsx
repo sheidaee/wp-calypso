@@ -38,7 +38,6 @@ export class UpgradeNudge extends React.Component {
 		icon: PropTypes.string,
 		event: PropTypes.string,
 		href: PropTypes.string,
-		jetpack: PropTypes.bool,
 		compact: PropTypes.bool,
 		plan: PropTypes.string,
 		feature: PropTypes.string,
@@ -52,7 +51,6 @@ export class UpgradeNudge extends React.Component {
 		message: 'And get your own domain address.',
 		icon: 'star',
 		event: null,
-		jetpack: false,
 		plan: null,
 		feature: null,
 		compact: false,
@@ -76,31 +74,19 @@ export class UpgradeNudge extends React.Component {
 
 	render() {
 		const {
-			canManageSite,
 			className,
 			compact,
 			event,
 			forceDisplay,
 			plan,
-			planHasFeature,
 			feature,
 			icon,
-			jetpack,
 			message,
 			site,
 			title,
 			translate,
-			isVip,
+			shouldNotDisplay,
 		} = this.props;
-
-		const shouldNotDisplay =
-			isVip ||
-			! canManageSite ||
-			( ! site || typeof site !== 'object' || typeof site.jetpack !== 'boolean' ) ||
-			( feature && planHasFeature ) ||
-			( ! feature && ! isFreePlan( site.plan ) ) ||
-			( feature === FEATURE_NO_ADS && site.options.wordads ) ||
-			( ( ! jetpack && site.jetpack ) || ( jetpack && ! site.jetpack ) );
 
 		if ( shouldNotDisplay && ! forceDisplay ) {
 			return null;
@@ -155,12 +141,23 @@ export class UpgradeNudge extends React.Component {
 export default connect(
 	( state, ownProps ) => {
 		const siteId = getSelectedSiteId( state );
+		const site = getSite( state, siteId );
+		const isVip = isVipSite( state, siteId );
+		const canManageSite = canCurrentUser( state, siteId, 'manage_options' );
+		const { feature, jetpack } = ownProps;
+		const planHasFeature = hasFeature( state, siteId, feature );
+		const shouldNotDisplay =
+			isVip ||
+			! canManageSite ||
+			( ! site || typeof site !== 'object' || typeof site.jetpack !== 'boolean' ) ||
+			( feature && planHasFeature ) ||
+			( ! feature && ! isFreePlan( site.plan ) ) ||
+			( feature === FEATURE_NO_ADS && site.options.wordads ) ||
+			( ( ! jetpack && site.jetpack ) || ( jetpack && ! site.jetpack ) );
 
 		return {
+			shouldNotDisplay: shouldNotDisplay,
 			site: getSite( state, siteId ),
-			planHasFeature: hasFeature( state, siteId, ownProps.feature ),
-			canManageSite: canCurrentUser( state, siteId, 'manage_options' ),
-			isVip: isVipSite( state, siteId ),
 		};
 	},
 	{ recordTracksEvent }
